@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -59,6 +60,12 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.progressNotificationCreateButton).setOnClickListener {
             createProgressNotification()
+        }
+        findViewById<Button>(R.id.openActivityButton).setOnClickListener {
+            SecondActivity.openSecondActivity("Some text", 123, this)
+        }
+        findViewById<Button>(R.id.openMapsButton).setOnClickListener {
+            openMaps(50.45, 30.52361)
         }
     }
 
@@ -155,5 +162,13 @@ class MainActivity : AppCompatActivity() {
             builder.setProgress(maxProgress, currentProgress, false)
             notify(NOTIFICATION_WITH_PROGRESS_BAR_ID, builder.build())
         }
+    }
+
+    private fun openMaps(latitude: Double, longitude: Double) {
+        val intent = Intent().apply {
+            action = Intent.ACTION_VIEW
+            data = Uri.parse("geo:$latitude,$longitude")
+        }
+        startActivity(intent)
     }
 }
