@@ -5,6 +5,8 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -16,14 +18,17 @@ import androidx.core.app.RemoteInput
 
 class MainActivity : AppCompatActivity() {
 
+    private val connectionStateReceiver = ConnectionStateReceiver()
+    private val userTapReceiver = UserTapReceiver()
+
     companion object {
         private const val CHANNEL_ID = "CHANNEL_ID"
         private const val SIMPLE_NOTIFICATION_ID = 1
         private const val NOTIFICATION_WITH_BUTTON_ID = 2
         private const val NOTIFICATION_WITH_REPLY_ID = 3
         private const val NOTIFICATION_WITH_PROGRESS_BAR_ID = 4
-        private const val NOTIFICATION2_ACTION = "action_button"
-        private const val NOTIFICATION3_ACTION = "reply"
+        private const val NOTIFICATION_WITH_BUTTON_ACTION = "NOTIFICATION_WITH_BUTTON_ACTION"
+        private const val REPLY_NOTIFICATION_ACTION = "REPLY_NOTIFICATION_ACTION"
         private const val KEY_TEXT_REPLY = "KEY_TEXT_REPLY"
     }
 
@@ -37,15 +42,23 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         when (intent.action) {
-            NOTIFICATION2_ACTION -> {
+            NOTIFICATION_WITH_BUTTON_ACTION -> {
                 val text = "${getString(R.string.action_notification_button_text)} clicked"
                 Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
             }
-            NOTIFICATION3_ACTION -> {
+            REPLY_NOTIFICATION_ACTION -> {
                 val text = getReplyNotificationInput().toString()
                 Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
             }
         }
+        registerReceiver(connectionStateReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        registerReceiver(userTapReceiver, UserTapReceiver.getIntentFilter())
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(connectionStateReceiver)
+        unregisterReceiver(userTapReceiver)
     }
 
     private fun setupOnClickListeners() {
@@ -62,10 +75,13 @@ class MainActivity : AppCompatActivity() {
             createProgressNotification()
         }
         findViewById<Button>(R.id.openActivityButton).setOnClickListener {
-            SecondActivity.openSecondActivity("Some text", 123, this)
+            SecondActivity.start("Some text", 123, this)
         }
         findViewById<Button>(R.id.openMapsButton).setOnClickListener {
             openMaps(50.45, 30.52361)
+        }
+        findViewById<Button>(R.id.receiverButton).setOnClickListener {
+            UserTapReceiver.start(this)
         }
     }
 
@@ -116,7 +132,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createNotificationWithButton() {
-        val pendingIntent = getPendingIntent(NOTIFICATION2_ACTION)
+        val pendingIntent = getPendingIntent(NOTIFICATION_WITH_BUTTON_ACTION)
         val builder = NotificationCompat.Builder(this, CHANNEL_ID).apply {
             setSmallIcon(R.drawable.ic_launcher_foreground)
             setContentTitle(getString(R.string.action_notification_title))
@@ -130,7 +146,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createNotificationWithReply() {
-        val pendingIntent = getPendingIntent(NOTIFICATION3_ACTION)
+        val pendingIntent = getPendingIntent(REPLY_NOTIFICATION_ACTION)
         val remoteInput = RemoteInput.Builder(KEY_TEXT_REPLY)
                 .setLabel(getString(R.string.reply_notification_hint_label))
                 .build()

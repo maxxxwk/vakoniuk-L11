@@ -12,7 +12,7 @@ class SecondActivity : AppCompatActivity() {
         private const val STRING_KEY = "STRING_KEY"
         private const val NUMBER_KEY = "NUMBER_KEY"
 
-        fun openSecondActivity(string: String, number: Int, context: Context) {
+        fun start(string: String, number: Int, context: Context) {
             val intent = Intent(context, SecondActivity::class.java).apply {
                 putExtra(STRING_KEY, string)
                 putExtra(NUMBER_KEY, number)
