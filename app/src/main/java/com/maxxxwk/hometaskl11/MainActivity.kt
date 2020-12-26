@@ -166,18 +166,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createProgressNotification() {
+        val maxProgress = 100
+        val currentProgress = 30
         val builder = NotificationCompat.Builder(this, CHANNEL_ID).apply {
             setContentTitle(getString(R.string.progress_notification_title))
             setContentText(getString(R.string.progress_notification_text))
             setSmallIcon(R.drawable.ic_launcher_foreground)
+            setProgress(maxProgress, currentProgress, false)
             priority = NotificationCompat.PRIORITY_DEFAULT
         }
-        val maxProgress = 100
-        val currentProgress = 30
-        getNotificationManager().apply {
-            builder.setProgress(maxProgress, currentProgress, false)
-            notify(NOTIFICATION_WITH_PROGRESS_BAR_ID, builder.build())
-        }
+        getNotificationManager().notify(NOTIFICATION_WITH_PROGRESS_BAR_ID, builder.build())
     }
 
     private fun openMaps(latitude: Double, longitude: Double) {
