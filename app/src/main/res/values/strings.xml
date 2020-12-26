@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">hometaskL11</string>
+    <string name="simple_notification_create_button_text">Simple notification</string>
+    <string name="action_notification_create_button_text">Notification with button</string>
+    <string name="reply_notification_create_button_text">Notification with text field</string>
+    <string name="progress_notification_create_button_text">Notification with progress bar</string>
+    <string name="open_activity_button_text">Open new activity</string>
+    <string name="open_maps_button_text">Open Maps</string>
+    <string name="receiver_button_text">Button for receiver</string>
+    <string name="simple_notification_title">Simple notification</string>
+    <string name="simple_notification_text">Simple notification text</string>
+    <string name="action_notification_title">Notification with action button</string>
+    <string name="action_notification_text">Notification with action button text</string>
+    <string name="action_notification_button_text">Action Button</string>
+    <string name="reply_notification_hint_label">Type message</string>
+    <string name="reply_notification_button_label">Reply</string>
+    <string name="reply_notification_title">Notification with reply</string>
+    <string name="reply_notification_text">Notification with reply text</string>
+    <string name="progress_notification_title">Progress notification</string>
+    <string name="progress_notification_text">Progress notification text</string>
 </resources>
